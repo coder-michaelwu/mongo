@@ -309,10 +309,8 @@ if [ "$originalArgOne" = 'mongod' ]; then
                                                            {"_id":2, "host":"mongo2","priority":1},
                                                            {"_id":3, "host":"mongo3","arbiterOnly" : true}
                                                        ]
-                                                   });                                               
-
-			        EOJS
-			
+                                                   })
+				EOJS
 			fi
 			
 		fi
