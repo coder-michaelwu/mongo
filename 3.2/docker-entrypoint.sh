@@ -297,7 +297,26 @@ if [ "$originalArgOne" = 'mongod' ]; then
 					roles: [ { role: 'root', db: $(_js_escape "$rootAuthDatabase") } ]
 				})
 			EOJS
+			
+			if [ "$MONGO_REPLSET_MASTER" ] && [ "$MONGO_REPLSET_NAME" ]; then
+			        "${mongo[@]}" "$rootAuthDatabase" <<-EOJS
+					use admin;
+					db.auth($(_js_escape "$MONGO_INITDB_ROOT_USERNAME"),$(_js_escape "$MONGO_INITDB_ROOT_PASSWORD"));
+					rs.initiate(
+                                                       {"_id" : $(_js_escape "$MONGO_REPLSET_NAME"),
+                                                        "members" : [
+                                                           {"_id":1, "host":"mongo1","priority":2},
+                                                           {"_id":2, "host":"mongo2","priority":1},
+                                                           {"_id":3, "host":"mongo3","arbiterOnly" : true}
+                                                       ]
+                                                   });                                               
+
+			        EOJS
+			
+			fi
+			
 		fi
+		
 
 		export MONGO_INITDB_DATABASE="${MONGO_INITDB_DATABASE:-test}"
 
